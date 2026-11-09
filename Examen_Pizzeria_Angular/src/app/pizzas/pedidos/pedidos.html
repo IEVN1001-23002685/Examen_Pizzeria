@@ -1,0 +1,55 @@
+<section class="min-h-screen bg-[#9bb6d0] pt-[7px] font-sans text-[16px] text-[#1f2937]">
+  <form (ngSubmit)="terminarPedido()" class="mx-[16px] h-[250px] border-[7px] border-[#ed1c24] px-[45px] pt-[34px]">
+    <div class="relative h-[26px]">
+      <label class="absolute left-0 top-0 flex items-center gap-[5px] whitespace-nowrap"><span>Nombre</span><input [(ngModel)]="cliente.nombre" name="nombre" required autocomplete="name" class="h-[26px] w-[131px] border border-[#9ca3af] bg-white px-[3px] text-[14px] leading-none text-black outline-none" /></label>
+      <label class="absolute left-[302px] top-0 flex items-center gap-[24px] whitespace-nowrap"><span>Dirección:</span><input [(ngModel)]="cliente.direccion" name="direccion" required autocomplete="street-address" class="h-[26px] w-[131px] border border-[#9ca3af] bg-white px-[3px] text-[14px] leading-none text-black outline-none" /></label>
+      <label class="absolute left-[804px] top-0 flex items-center gap-[7px] whitespace-nowrap"><span>Teléfono</span><input [(ngModel)]="cliente.telefono" name="telefono" required autocomplete="tel" class="h-[26px] w-[131px] border border-[#9ca3af] bg-white px-[3px] text-[14px] leading-none text-black outline-none" /></label>
+    </div>
+
+    <div class="relative mt-[35px] h-[125px]">
+      <fieldset class="absolute -left-[23px] top-0 h-[125px] w-[263px] border border-[#d6e2ee] px-[22px] pt-[7px]">
+        <legend class="px-[1px]">Tamaño Pizza</legend>
+        <label *ngFor="let tamano of tamanos" class="mt-[7px] flex items-center gap-[7px] leading-none first:mt-0"><input type="radio" [(ngModel)]="tamanoSeleccionado" name="tamano" [value]="tamano.nombre" class="m-0 h-[17px] w-[17px] accent-white" /><span>{{ tamano.nombre }} ${{ tamano.precio }}</span></label>
+      </fieldset>
+
+      <fieldset class="absolute left-[412px] top-0 h-[125px] w-[264px] border border-[#d6e2ee] px-[22px] pt-[7px]">
+        <legend class="px-[1px]">Ingredientes</legend>
+        <label *ngFor="let ingrediente of ingredientes" class="mt-[7px] flex items-center gap-[7px] leading-none first:mt-0"><input type="checkbox" [checked]="ingredientesSeleccionados.includes(ingrediente.nombre)" (change)="alternarIngrediente(ingrediente.nombre)" class="m-0 h-[17px] w-[17px] accent-white" /><span>{{ ingrediente.nombre }} ${{ ingrediente.precio }}</span></label>
+      </fieldset>
+
+      <div class="absolute left-[804px] top-0">
+        <label class="block whitespace-nowrap">Num. de Pizzas.</label>
+        <input type="number" [(ngModel)]="cantidad" name="cantidad" min="1" step="1" required class="mt-[8px] block h-[27px] w-[132px] border border-[#9ca3af] bg-white px-[3px] text-[14px] text-black outline-none" />
+        <button type="button" (click)="agregarPizza()" class="ml-[26px] mt-[29px] h-[28px] w-[95px] border border-[#d1d5db] bg-[#f4f4f4] text-[14px] text-[#4b5563] shadow-[inset_0_1px_0_#fff]">Agregar</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="min-w-[1240px] bg-[#9bb6d0] px-[8px] py-[7px]">
+    <div class="grid h-[366px] grid-cols-[650px_552px] gap-[11px]">
+      <section class="border-[7px] border-black px-[19px] pt-[14px]">
+        <div class="h-[199px] overflow-hidden border-2 border-[#4b4b4b] bg-[#b4b4b4]">
+          <table class="w-full table-fixed border-collapse text-[14px] leading-none text-[#334155]">
+            <thead class="h-[28px] bg-white"><tr><th class="w-[53px] border border-[#b6b6b6]"></th><th class="border border-[#b6b6b6] font-medium">Tamaño</th><th class="border border-[#b6b6b6] font-medium">Ingredientes</th><th class="border border-[#b6b6b6] font-medium">Num. Pizzas</th><th class="border border-[#b6b6b6] font-medium">SubTotal</th></tr></thead>
+            <tbody><tr *ngFor="let pizza of pizzas; let indice = index" (click)="seleccionarPizza(indice)" class="h-[28px] cursor-pointer bg-white"><td class="border border-[#b6b6b6] pl-[9px]"><input type="radio" name="pizzaSeleccionada" [checked]="pizzaSeleccionada === indice" (change)="seleccionarPizza(indice)" class="h-[12px] w-[12px]" /></td><td class="border border-[#b6b6b6] px-2">{{ pizza.tamano }}</td><td class="border border-[#b6b6b6] px-2">{{ pizza.ingredientes.join(', ') }}</td><td class="border border-[#b6b6b6] px-2 text-center">{{ pizza.cantidad }}</td><td class="border border-[#b6b6b6] px-2 text-right">${{ pizza.subtotal.toFixed(2) }}</td></tr></tbody>
+          </table>
+        </div>
+        <div class="mt-[20px] flex items-center justify-between px-[41px]">
+          <button type="button" (click)="quitarPizzaSeleccionada()" class="h-[27px] w-[96px] border border-[#d1d5db] bg-[#f4f4f4] text-[14px] text-[#4b5563] shadow-[inset_0_1px_0_#fff]">Quitar</button>
+          <button type="button" (click)="terminarPedido()" class="mr-[92px] h-[27px] w-[95px] border border-[#d1d5db] bg-[#f4f4f4] text-[14px] text-[#4b5563] shadow-[inset_0_1px_0_#fff]">Terminar</button>
+        </div>
+      </section>
+
+      <section class="border-[7px] border-[#fff200] bg-[#b4b4b4] p-[20px]">
+        <fieldset class="h-[255px] border border-[#d6d6d6] px-[35px] pt-[35px]">
+          <legend class="px-[2px] text-[14px]">Ventas del día</legend>
+          <div *ngIf="ventasHoy as ventas" class="space-y-[18px] text-[28px] font-bold leading-none text-black">
+            <p *ngFor="let pedido of ventas.pedidos">{{ pedido.cliente.nombre }} <span class="ml-[12px]">total</span> <span class="ml-[12px]">${{ pedido.total.toFixed(2) }}</span></p>
+            <p class="pt-[31px]">Ventas totales del día: <span class="ml-[12px]">${{ ventas.total_ventas.toFixed(2) }}</span></p>
+          </div>
+        </fieldset>
+        <a routerLink="/pizzas/ventas" class="mx-auto mt-[12px] flex h-[26px] w-[354px] items-center justify-center border border-[#d1d5db] bg-[#f4f4f4] text-[14px] text-[#4b5563] shadow-[inset_0_1px_0_#fff]">Ventas totales por día</a>
+      </section>
+    </div>
+  </div>
+</section>

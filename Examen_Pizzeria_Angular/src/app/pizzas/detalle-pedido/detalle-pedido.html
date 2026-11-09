@@ -1,0 +1,34 @@
+<section class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-widest text-orange-600">Consulta</p>
+      <h1 class="mt-1 text-3xl font-bold tracking-tight text-stone-900">Detalle del pedido</h1>
+    </div>
+    <a routerLink="/pizzas/pedidos" class="inline-flex w-fit rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-50">Volver a pedidos</a>
+  </div>
+
+  <div *ngIf="pedido as pedido" class="grid gap-6 lg:grid-cols-3">
+    <section class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200 lg:col-span-1 sm:p-6">
+      <h2 class="text-lg font-bold text-stone-900">Cliente</h2>
+      <dl class="mt-5 space-y-4 text-sm">
+        <div><dt class="font-medium text-stone-500">Nombre</dt><dd class="mt-1 font-semibold text-stone-900">{{ pedido.cliente.nombre }}</dd></div>
+        <div><dt class="font-medium text-stone-500">Dirección</dt><dd class="mt-1 text-stone-800">{{ pedido.cliente.direccion }}</dd></div>
+        <div><dt class="font-medium text-stone-500">Teléfono</dt><dd class="mt-1 text-stone-800">{{ pedido.cliente.telefono }}</dd></div>
+      </dl>
+    </section>
+
+    <section class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200 lg:col-span-2">
+      <div class="flex flex-col gap-4 border-b border-stone-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div><p class="text-sm font-medium text-stone-500">Pedido #{{ pedido.id_pedido }}</p><p class="mt-1 text-sm text-stone-600">Fecha: {{ pedido.fecha_pedido }}</p></div>
+        <p class="text-xl font-bold text-orange-700">${{ pedido.total.toFixed(2) }}</p>
+      </div>
+      <div *ngIf="(pedido.detalles || []).length === 0" class="p-6 text-center text-sm text-stone-500">Este pedido no contiene pizzas registradas.</div>
+      <div *ngIf="(pedido.detalles || []).length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-stone-200 text-left text-sm">
+          <thead class="bg-stone-50 text-xs uppercase tracking-wide text-stone-500"><tr><th class="px-5 py-3 font-semibold">Tamaño</th><th class="px-5 py-3 font-semibold">Ingredientes</th><th class="px-5 py-3 text-center font-semibold">Cantidad</th><th class="px-5 py-3 text-right font-semibold">Subtotal</th></tr></thead>
+          <tbody class="divide-y divide-stone-100"><tr *ngFor="let pizza of pedido.detalles" class="hover:bg-orange-50/40"><td class="px-5 py-4 font-semibold text-stone-900">{{ pizza.tamano }}</td><td class="px-5 py-4 text-stone-700">{{ ingredientesComoTexto(pizza.ingredientes) || 'Sin ingredientes extra' }}</td><td class="px-5 py-4 text-center text-stone-700">{{ pizza.cantidad }}</td><td class="px-5 py-4 text-right font-semibold text-stone-900">${{ pizza.subtotal.toFixed(2) }}</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</section>
